@@ -1,0 +1,64 @@
+using Amazon.Lambda.Core;
+
+// Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
+[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
+
+namespace Assignment10
+{
+    public enum Condition
+    {
+        EXCELLENT,
+        GOOD,
+        FAIR,
+        BAD
+    };
+    public class Car
+    {
+        public string Make { get; set; }
+        public Condition Condition { get; set; }
+        private int privateSpeed;
+        public int Speed
+        {
+            get
+            {
+                return privateSpeed;
+            }
+            set
+            {
+                privateSpeed = value;
+                //check if value is less then -50 and if it is set it to -50
+                if  (privateSpeed < -50)
+                {
+                    Speed = -50;
+                }
+                //check if value is greater then 200 and if it is set it to 200
+                else if  (privateSpeed > 200)
+                {
+                    Speed = 200;
+                }
+            }
+        }
+
+
+        // Create a class constructor with multiple parameters
+        public Car(string carMake, Condition carCondition)
+        {
+            this.Make = carMake;
+            Condition = carCondition;
+          
+        }
+        //default constructor
+        public Car()
+        {
+            this.Make = "";
+            this.Speed = 0;
+            Condition = Condition.EXCELLENT;
+        }
+
+    }
+
+    public class Function
+    {
+
+    }
+}
