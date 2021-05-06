@@ -1,0 +1,35 @@
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Amazon.Lambda.Core;
+using System.Dynamic;
+
+[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
+
+namespace Assignment9WebRequest
+{
+    public class Function
+    {
+        public static readonly HttpClient client = new HttpClient();
+        public async Task<ExpandoObject> FunctionHandler(ILambdaContext context)
+        {
+            string api = "https://api.nytimes.com/svc/books/v3/reviews.json?author=Danielle+Steel&api-key=gKlAbQJItUBKnWF9F9VK7D5G34X9oE82";
+
+            dynamic expandoObj = new ExpandoObject();
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(api);
+
+                HttpResponseMessage response = await client.GetAsync(api);
+
+                string result = await response.Content.ReadAsStringAsync();
+
+                expandoObj = JsonConvert.DeserializeObject<ExpandoObject>(result);
+
+                return expandoObj;
+            }
+        }
+    }
+}
